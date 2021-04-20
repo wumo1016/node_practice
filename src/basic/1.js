@@ -52,18 +52,12 @@
    └───────────────────────────┘
 */
 
-const fs = require('fs')
-fs.readFile('README.md', 'utf8', () => {
-  setTimeout(() => {
-    console.log('setTimeout');
-  })
-  setImmediate(() => {
-    console.log('setImmediate');
-  })
-})
-// setImmediate
-// setTimeout
-// 文件读取属于poll阶段
+// 9. require exports module __dirname __filename 也叫全局属性 但是不在global上
+// 因为每个文件都是一个模块 而模块的实现是靠函数 上面五个属性就是函数的参数
+
+
+// 10.模块化规范 commonjs amd cmd umd(commonjs+amd+cmd) esm
+// 最早是为了解决命名冲突问题
 
 
 /* env相关
@@ -128,6 +122,18 @@ setImmediate(() => {
 // setImmediate
 
 // 示例2：
+const fs = require('fs')
+fs.readFile('README.md', 'utf8', () => {
+  setTimeout(() => {
+    console.log('setTimeout');
+  })
+  setImmediate(() => {
+    console.log('setImmediate');
+  })
+})
+// setImmediate
+// setTimeout
+// 文件读取属于poll阶段
 
 
 */
