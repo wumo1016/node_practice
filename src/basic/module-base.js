@@ -20,7 +20,29 @@
         - 2.www文件中 添加执行方式 #! /usr/bin/env node
         - 3.将此包放到npm下(全局安装或在当前目录下使用npm link链接一下，临时使用)
       - 本地安装：在代码中使用的，依赖关系：
-        - 开发依赖：
+        - 项目依赖(dependencies)： --save(-S) 只安装生产依赖(npm install --production)
+        - 开发依赖(devDependencies)：webpack --save-dev(-D)
+        - 同等依赖(peerDependencies)：会提示安装，不会强制安装
+        - 捆绑依赖(bundledDependencies)：配置npm pack(将代码打包成一个压缩包使用 不包含node_modules) 但会将bundledDependencies中的打包到node_modules中去
+        - 可选依赖(optionalDependencies)：
+    - .bin模块
+      - 可以在命令行中使用
+      - 如果直接用npm run script的方式，默认在执行命令之前，会将环境变量添加到全局下
+    - npx
+      - 如果模块不存在 会先安装再使用 使用后自动删除
+    - 版本号
+      - semver major.minor.patch
+      - 四种版本号
+        - ^2.2.4 匹配major版本下，所有更新版本
+        - ~2.2.4 匹配major.minor版本下，所有更新版本
+        - >= <=
+    - 包的发布
+      - 包的名字是否重名(package.json中的name)
+      - 将npm切到官方源 可以使用 nrm ls查看 切换源 nrm use npm
+      - 先登录 npm addUser 输入账号 密码 邮箱
+      - 发布npm publish
+    - 包的卸载
+      - npm unpublish --force
   - 3.文件模块
     - 查找规范：
       - 首先判断是否是内置模块，是否是第三方
