@@ -13,7 +13,16 @@
   - 1.核心模块、内置模块(node中自带的模块fs、http、vm)
   - 2.第三方模块(co)
   - 3.文件模块
+    - 查找规范：
+      - 首先判断是否是内置模块，是否是第三方
+      - 1.默认优先查找.js文件，尝试查找.json文件
+      - 2.如果没有就查找同名文件夹(当成一个包)，先查找package.json中的main(入口文件)
+      - 3.如果没有package.json中指定的文件或没有package.json，就查找index.js
+      - 4.都没有直接报错
 */
+
+const jquery = require('./jquery')
+console.log(jquery);
 
 /* require的实现
   - 1.读取文件
