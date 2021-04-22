@@ -1,6 +1,7 @@
 // node中的模块 esm commonjs
 // 用webpack打包后 会将es6打包为commonjs模块
 // esm(支持tree-shaking)是静态模块  commonjs支持动态模块(可以在代码执行的时候引入模块)
+// 模块中 this === module.exports
 
 /* commonjs规范
   - 1.每个文件都是一个模块(每个模块外面都是一个函数)
