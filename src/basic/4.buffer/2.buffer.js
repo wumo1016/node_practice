@@ -18,3 +18,5 @@ function test3() {
   const b3 = Buffer.from('珠峰')
   console.log(b3); // <Buffer e7 8f a0 e5 b3 b0> 一个汉字三个字节
 }
+
+
