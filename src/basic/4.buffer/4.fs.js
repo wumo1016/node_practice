@@ -83,8 +83,3 @@ copy('./a.txt', './b.txt', function (err) {
   if (err) return console.log(err);
   console.log('拷贝成功');
 })
-
-
-
-
-// 
