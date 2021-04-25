@@ -8,7 +8,7 @@
       "type": "pwa-node",
       "request": "launch",
       "name": "run module",
-      "program": "${workspaceFolder}\\src\\test\\b.js"
+      "program": "${workspaceFolder}\\src\\basic\\5.stream\\1.readStream.js"
     }
   ]
 }
