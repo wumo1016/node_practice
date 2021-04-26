@@ -6,7 +6,7 @@
 const path = require('path')
 const fs = require('fs') // 基于stream模块底层扩展了一个文件读写方法
 
-let rs = fs.createReadStream(path.resolve(__dirname, './a1.txt'), {
+let rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
   flags: 'r', // 默认
   encoding: null, // 默认buffer
   autoClose: true,
