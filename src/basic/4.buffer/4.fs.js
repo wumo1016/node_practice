@@ -7,7 +7,7 @@
     - read(fd, buffer, offset, length, positon, callback)
       - offset：buffer的开始位置
       - length：写入buffer的长度
-      - position：从文件的第六个开始取值然后写入
+      - position：源文件的开始位置
     - write(fd, buffer, offset, length, positon, callback)
     - close
   - 读文件
