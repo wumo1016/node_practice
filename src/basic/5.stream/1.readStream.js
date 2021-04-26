@@ -27,12 +27,12 @@ rs.on('data', function (chunk) {
   rs.pause() // 暂停读取
 })
 
-rs.on('end', function () { // 文件读取后触发
+rs.on('end', function () { // 文件读取结束后触发
   console.log('end');
   clearInterval(t)
 })
 
-rs.on('close', function () { // 文件读取后触发
+rs.on('close', function () { // 文件关闭后触发
   console.log('close');
 })
 
