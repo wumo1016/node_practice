@@ -6,7 +6,7 @@
 const path = require('path')
 const fs = require('fs') // 基于stream模块底层扩展了一个文件读写方法
 
-let rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
+let rs = fs.createReadStream(path.resolve(__dirname, './a1.txt'), {
   flags: 'r', // 默认
   encoding: null, // 默认buffer
   autoClose: true,
@@ -36,6 +36,9 @@ rs.on('close', function () { // 文件关闭后触发
   console.log('close');
 })
 
+rs.on('error', function (err) { // 文件关闭后触发
+  console.log(err);
+})
 
-
-// 
+// open 和 close 是文件流独有的
+// 可读流 都具备 on('data') on('end') on('error') resume pause 特性
