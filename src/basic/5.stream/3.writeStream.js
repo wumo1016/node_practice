@@ -5,7 +5,8 @@
 
 const fs = require('fs')
 const path = require('path')
-let ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
+
+/* let ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
   flags: 'w',
   encoding: 'utf8',
   start: 0,
@@ -27,4 +28,25 @@ console.log(canWrite);
 
 ws.on('close', function (fd) {
   console.log('open', fd);
+}) */
+
+const rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
+  highWaterMark: 3
+})
+
+const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
+  highWaterMark: 4
+})
+
+rs.on('data', function (data) {
+  let flag = ws.write(data)
+  if (!flag) {
+    console.log('吃不下');
+    rs.pause()
+  }
+})
+
+ws.on('drain', function () { // 当前写入已经完毕
+  console.log('吃完了');
+  rs.resume()
 })
