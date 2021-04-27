@@ -16,17 +16,20 @@
 // console.log(__dirname); // 当前文件所在的目录路径(g:\wumo\node_practice\basic)
 // console.log(__filename); // 当前文件路径(g:\wumo\node_practice\basic\1.简介.js)
 
-// 7.process   
+// 7.process
 //  - platform 平台(win32/darwin)
-//  - cwd(current working direction) 当前工作目录，运行目录
+//  - cwd(current working direction) 当前工作目录，运行目录，命令执行目录
 //  - env 环境变量(用户变量+系统变量)
-//  - argv (两个参数 1:执行node所在的文件 2.当前执行的问价 ..后面就是用户执行命令时传入的参数)
-//  - nextTick node自己实现的 优先级比promise高
+//  - argv (两个参数 1:执行node所在的文件 2.当前执行的文件 ..后面就是用户执行命令时传入的参数)
+//  - nextTick node自己实现的 优先级比promise.then高
 //  - chdir 改变工作目录
 
 // 8.EventLoop
 /*
-本阶段执行已经被 setTimeout() 和 setInterval() 的调度回调函数。
+node是多个宏任务队列
+  - 先默认执行主栈代码 会调用 process.nextTick setTimeout
+  - 本阶段执行已经被 setTimeout() 和 setInterval() 的调度回调函数
+  - 宏任务队列：timer poll check
    ┌───────────────────────────┐
 ┌─>│           timers          │
 │  └─────────────┬─────────────┘
