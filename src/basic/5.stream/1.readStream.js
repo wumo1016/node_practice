@@ -11,7 +11,7 @@ let rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
   encoding: null, // 默认buffer
   autoClose: true,
   start: 0,
-  highWaterMark: 3 // 每次读取数据个数 默认是 64*1024
+  highWaterMark: 3 // 每次读取多少字节 默认是 64*1024
 })
 
 let t = setInterval(() => {
