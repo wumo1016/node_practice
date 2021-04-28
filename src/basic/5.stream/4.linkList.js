@@ -28,28 +28,75 @@ class LinkList {
     return current
   }
 
-  add(ele) {
-    let head = this.head
-    if (this.size === 0) {
-      this.head = new Node(ele, head)
+  add(index, ele) {
+    if (arguments.length === 1) {
+      ele = index
+      index = this.size
+    }
+    if (index === 0) {
+      this.head = new Node(ele, this.head)
     } else {
-      let prevNode = this._node(this.size - 1)
+      let prevNode = this._node(index - 1)
       prevNode.next = new Node(ele, prevNode.next)
     }
     this.size++
   }
-}
 
+  remove(index) {
+    if (index > this.size - 1) {
+      return console.log('超出索引');
+    }
+    let removeNode
+    if (index === 0) {
+      removeNode = this.head
+      this.head = this.head.next
+    } else {
+      let prevNode = this._node(index - 1)
+      removeNode = prevNode.next
+      prevNode.next = prevNode.next.next
+    }
+    this.size--
+    return removeNode
+  }
+
+  reverse() {
+    /* 递归反转 */
+    // function r(head) {
+    //   if (head === null || head.next === null) return head // 空链表 / 只有一个值
+    //   let newHead = r(head.next)
+    //   head.next.next = head
+    //   head.next = null
+    //   return newHead
+    // }
+    // return r(this.head)
+
+    /* 循环搬家 */
+    let head = this.head
+    if (head === null || head.next === null) return head
+    let newHead = null
+    while (head !== null) { // 如果不是null 就一直搬家
+      let temp = head.next // 保留下一个元素
+      head.next = newHead // 更新当前元素的指针
+      newHead = head // 然新链表的头等于老链表的头
+      head = temp // 更新头指针
+    }
+    return newHead
+  }
+
+}
 const ll = new LinkList()
 ll.add(1)
 ll.add(2)
 ll.add(3)
 ll.add(4)
-ll.add(5)
+
 console.dir(ll, {
-  depth: 100
+  depth: Infinity
 });
 
+console.dir(ll.reverse(), {
+  depth: Infinity
+});
 
 
 
