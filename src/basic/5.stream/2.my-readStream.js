@@ -32,7 +32,7 @@ class ReadStream extends EventEmitter {
       this.emit('open', rfd)
     })
   }
-
+  
   read() {
     if (typeof this.rfd !== 'number') {
       return this.once('open', () => this.read())
