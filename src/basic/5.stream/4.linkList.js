@@ -74,11 +74,11 @@ class LinkList {
     let head = this.head
     if (head === null || head.next === null) return head
     let newHead = null
-    while (head !== null) { // 如果不是null 就一直搬家
-      let temp = head.next // 保留下一个元素
-      head.next = newHead // 更新当前元素的指针
-      newHead = head // 然新链表的头等于老链表的头
-      head = temp // 更新头指针
+    while (head !== null) {
+      let tmp = head.next
+      head.next = newHead
+      newHead = head
+      head = tmp
     }
     return newHead
   }
