@@ -4,8 +4,6 @@
     - 上一个节点的next指向当前节点
  */
 
-
-
 class Node {
   constructor(ele, next) {
     this.ele = ele // 储存的数据
@@ -97,8 +95,3 @@ console.dir(ll, {
 console.dir(ll.reverse(), {
   depth: Infinity
 });
-
-
-
-
-//
