@@ -10,7 +10,7 @@ class WriteStream extends EventEmitter {
     this.encoding = options.encoding || 'utf8'
     this.mode = options.mode || 0o666
     this.emitClose = options.emitClose || true
-    this.start = options.start || 0
+    this.offset = options.start || 0
     this.highWaterMark = options.highWaterMark || 16 * 1024
 
     this.len = 0 // 缓存区大小 调用write但未写入的数据
@@ -28,18 +28,36 @@ class WriteStream extends EventEmitter {
     })
   }
 
+  clearBuffer() {
+    if (this.cache.length > 0) {
+      const target = this.cache.shift()
+      this._write(target.chunk, target.encoding, target.cb)
+    } else {
+      this.writing = false
+      if (this.needDrain) {
+        this.emit('drain')
+      }
+    }
+  }
+
   write(chunk, encoding = this.encoding, cb = () => {}) {
     // 因为需要将chunk和highWaterMark的长度进行对比 所以可以将数据全部转成buffer
     chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
     this.len += chunk.length
     let returnValue = this.len < this.highWaterMark
     this.needDrain = !returnValue
+    // 扩展cb 在每次写完后方便清缓存中待写入的数据
+    let userCb = cb 
+    cb = () => {
+      userCb()
+      this.clearBuffer()
+    }
+
     // 写入 判断是否是第一次写入 第一次直接调用fs.write 后面的先写入缓存
     if (!this.writing) {
       this.writing = true
-      console.log('真正写入');
+      this._write(chunk, encoding, cb)
     } else {
-      console.log('保存到缓存区');
       this.cache.push({
         chunk,
         encoding,
@@ -49,19 +67,30 @@ class WriteStream extends EventEmitter {
     return returnValue
   }
 
+  _write(chunk, encoding, cb) {
+    if (typeof this.fd !== 'number') {
+      return this.once('open', () => this._write(chunk, encoding, cb))
+    }
+    fs.write(this.fd, chunk, 0, chunk.length, this.offset, (err, written) => {
+      this.offset += written
+      this.len -= written
+      cb()
+    })
+  }
+
 }
 
 
-// const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
-const ws = new WriteStream(path.resolve(__dirname, './b.txt'), {
+const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
+// const ws = new WriteStream(path.resolve(__dirname, './b.txt'), {
   highWaterMark: 4
-})
+})  
 
 let i = 1
 
 function write() {
   let flag = true
-  while (i < 10 && flag) {
+  while (i <= 20 && flag) {
     flag = ws.write(i++ + '')
   }
 }

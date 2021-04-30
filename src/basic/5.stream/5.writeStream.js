@@ -63,7 +63,7 @@ const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
 let i = 1
 function write() {
   let flag = true
-  while (i < 10 && flag) {
+  while (i < 20 && flag) {
     flag = ws.write(i++ + '')
   }
 }
