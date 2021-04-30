@@ -42,7 +42,8 @@ class LinkList {
 
   remove(index) {
     if (index > this.size - 1) {
-      return console.log('超出索引');
+      // console.log('超出索引');
+      return
     }
     let removeNode
     if (index === 0) {
@@ -82,16 +83,18 @@ class LinkList {
   }
 
 }
-const ll = new LinkList()
-ll.add(1)
-ll.add(2)
-ll.add(3)
-ll.add(4)
+// const ll = new LinkList()
+// ll.add(1)
+// ll.add(2)
+// ll.add(3)
+// ll.add(4)
 
-console.dir(ll, {
-  depth: Infinity
-});
+// console.dir(ll, {
+//   depth: Infinity
+// });
 
-console.dir(ll.reverse(), {
-  depth: Infinity
-});
+// console.dir(ll.reverse(), {
+//   depth: Infinity
+// });
+
+module.exports = LinkList
