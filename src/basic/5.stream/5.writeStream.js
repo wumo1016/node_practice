@@ -1,6 +1,10 @@
 /* 可写流
   - 由于write的方法市异步的 所以多个write方法操作同一个文件 就会又出错的情况
   - 除了第一次的write 可以将其他的进行排队 等待一个完成后 清空缓存区
+  - 实现
+    - 1.new WirteStream()
+    - 2.WirteStream内部要继承 writable接口
+    - 3.write方法调用父类的write，父类调用子类的_write
  */
 
 const fs = require('fs')
@@ -30,7 +34,7 @@ ws.on('close', function (fd) {
   console.log('open', fd);
 }) */
 
-const rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
+/* const rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
   highWaterMark: 3
 })
 
@@ -46,7 +50,26 @@ rs.on('data', function (data) {
   }
 })
 
-ws.on('drain', function () { // 当前写入已经完毕
+ws.on('drain', function () { // 每次达到预期后调用
   console.log('吃完了');
   rs.resume()
+}) */
+
+const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
+  highWaterMark: 9
+})
+
+
+let i = 1
+function write() {
+  let flag = true
+  while (i < 10 && flag) {
+    flag = ws.write(i++ + '')
+  }
+}
+write()
+
+ws.on('drain', () => { // 每次预期写完后 触发
+  console.log('写完了');
+  write()
 })
