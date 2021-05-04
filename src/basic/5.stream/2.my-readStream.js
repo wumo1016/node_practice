@@ -25,6 +25,19 @@ class ReadStream extends EventEmitter {
     })
   }
 
+  pipe(ws) {
+    this.on('data', (data) => {
+      let flag = ws.write(data)
+      if (!flag) {
+        this.pause()
+      }
+    })
+
+    ws.on('drain', () => {
+      this.resume()
+    })
+  }
+
   open() {
     fs.open(this.path, this.flags, (err, rfd) => {
       if (err) return this.destory(err)
@@ -32,7 +45,7 @@ class ReadStream extends EventEmitter {
       this.emit('open', rfd)
     })
   }
-  
+
   read() {
     if (typeof this.rfd !== 'number') {
       return this.once('open', () => this.read())
@@ -77,7 +90,7 @@ class ReadStream extends EventEmitter {
 
 }
 
-let rs = new ReadStream(path.resolve(__dirname, './a.txt'), {
+/* let rs = new ReadStream(path.resolve(__dirname, './a.txt'), {
   // let rs = fs.createReadStream(path.resolve(__dirname, './a.txt'), {
   flags: 'r',
   encoding: null,
@@ -85,7 +98,7 @@ let rs = new ReadStream(path.resolve(__dirname, './a.txt'), {
   start: 0,
   // end: 1, // 包括end位
   highWaterMark: 3
-})
+}) */
 
 /* rs.on('open', function (fd) {
   console.log('open', fd);
@@ -103,7 +116,7 @@ rs.on('close', function () {
   console.log('close');
 }) */
 
-let t = setInterval(() => {
+/* let t = setInterval(() => {
   rs.resume()
 }, 1000);
 
@@ -123,4 +136,6 @@ rs.on('end', function () {
 
 rs.on('close', function () {
   console.log('close');
-})
+}) */
+
+module.exports = ReadStream
