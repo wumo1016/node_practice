@@ -47,7 +47,7 @@ class WriteStream extends EventEmitter {
     let returnValue = this.len < this.highWaterMark
     this.needDrain = !returnValue
     // 扩展cb 在每次写完后方便清缓存中待写入的数据
-    let userCb = cb 
+    let userCb = cb
     cb = () => {
       userCb()
       this.clearBuffer()
@@ -81,10 +81,10 @@ class WriteStream extends EventEmitter {
 }
 
 
-const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
-// const ws = new WriteStream(path.resolve(__dirname, './b.txt'), {
+/* const ws = fs.createWriteStream(path.resolve(__dirname, './b.txt'), {
+  // const ws = new WriteStream(path.resolve(__dirname, './b.txt'), {
   highWaterMark: 4
-})  
+})
 
 let i = 1
 
@@ -99,4 +99,6 @@ write()
 ws.on('drain', () => { // 每次预期写完后 触发
   console.log('写完了');
   write()
-})
+}) */
+
+module.exports = WriteStream
