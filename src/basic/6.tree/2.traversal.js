@@ -119,15 +119,8 @@ let tree = new Tree();
 // tree.levelOrderTraversal((node) => {
 //   console.log(node.ele);
 // })
+
 tree.reverse()
 console.dir(tree, {
   depth: Infinity
 });
-
-
-
-
-
-
-
-//
