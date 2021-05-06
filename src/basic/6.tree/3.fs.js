@@ -153,7 +153,7 @@ rmdir('a').then(() => {
   console.log(err);
 }) */
 
-// 串行广度删除
+/* // 串行广度删除
 const fs = require('fs').promises
 
 async function rmdir(pathStr) {
@@ -184,6 +184,4 @@ rmdir('a').then(() => {
   console.log('删除成功');
 }).catch(err => {
   console.log(err);
-})
-
-//
+}) */
