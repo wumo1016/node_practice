@@ -16,7 +16,7 @@
   - 用来解决大文件读取问题，客户端发送给服务端的数据都是一段一段的，接收的数据也是，都是使用流的方式
   - 流的模式
     - 可读流：on('data') on('end') push(数据|null)
-    - 可写流：ws.write(string|buffer) on('drain')
+    - 可写流：ws.write(string|buffer) ws.end
     - 双工流：可读可写
     - pipe管道：将读取的内容发送给写入，主要靠的是发布订阅
 
@@ -117,4 +117,5 @@
       - cors后端配置
       - nginx反向代理
       - websocket
-    
+    - 报文
+      - 
