@@ -4,8 +4,10 @@ const interfaces = os.networkInterfaces()
 const url = require('url')
 const path = require('path')
 const fs = require('fs').promises
+const crypto = require('crypto')
 const {
-  createReadStream
+  createReadStream,
+  readFileSync
 } = require('fs')
 
 const chalk = require('chalk') // 给命令行添加颜色
@@ -33,7 +35,7 @@ class Server {
     try {
       let stateObj = await fs.stat(requestPath)
       if (stateObj.isFile()) {
-        this.sendFile(req, res, requestPath)
+        this.sendFile(req, res, requestPath, stateObj)
       } else {
         const dirs = await fs.readdir(requestPath)
         const html = await ejs.renderFile(path.resolve(__dirname, './template.html'), {
@@ -73,7 +75,34 @@ class Server {
     })
   }
 
-  sendFile(req, res, requestFile) {
+  cacheFile(req, res, requestFile, stateObj) {
+    // 先设置强制缓存
+    res.setHeader('Cache-Control', 'max-age=10')
+    res.setHeader('Expries', new Date(Date.now() + 1000 * 10).toUTCString())
+    // 再设置协商缓存
+    const ctime = stateObj.ctime.toUTCString()
+    const etag = crypto.createHash('md5').update(readFileSync(requestFile)).digest('base64')
+    res.setHeader('Last-Modified', ctime)
+    res.setHeader('Etag', etag)
+
+    let ifModifiedSince = req.headers['if-modified-since']
+    let ifNodeMatch = requ.headers['if-none-match']
+
+    if (ifModifiedSince !== ctime) { // 有可能时间一样 内容不一样
+      return false
+    }
+    if (ifNodeMatch !== etag) {
+      return false
+    }
+    return true
+  }
+
+  sendFile(req, res, requestFile, stateObj) {
+    // 判断有没有缓存 有缓存就是用对比缓存
+    if (this.cacheFile(req, res, requestFile, stateObj)) {
+      res.statusCode = 304
+      return res.end()
+    }
     // 返回文件 需要给浏览器提供内容类型和内容的编码格式
     res.setHeader('Content-Type', mime.getType(requestFile) + ';charset=utf-8')
     // 边读边写给浏览器
