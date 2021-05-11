@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="file">
+  <button id="btn">点击</button>
+  <script>
+    btn.addEventListener('click', () => {
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', 'http://localhost:3000/login', true)
+      xhr.setRequestHeader('Content-Type', 'application/json') // 请求数据类型
+      xhr.responseType = 'json' // 要求返回的数据类型 加上这个如果返回的是json字符串 就会自动转成json
+      xhr.onload = function () {
+        console.log(xhr.response);
+      }
+      xhr.send('{ "name": "wyb" }')
+    })
+  </script>
+</body>
+
+</html>
