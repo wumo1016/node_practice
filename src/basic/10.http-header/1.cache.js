@@ -11,10 +11,16 @@ const server = http.createServer((req, res) => {
     pathname,
     query
   } = url.parse(req.url, true)
-  console.log(req.url);
 
   let filePath = path.join(__dirname, 'public', pathname)
 
+  // 缓存类型：disk cache memory cache
+  /* Cache-Control常见值
+    - no-cache(每次都向服务器发送请求，会存到浏览器的缓存)
+    - no-store(每次都向服务器要，但是不会缓存到浏览器中)
+    - 如果服务器每次都返回最新的 就会用最新的内容
+  */
+  // Cache-Control与Expires效果相同 有些旧版本浏览器只支持Expires 所以一般都写，而且时间要一致
   res.setHeader('Cache-Control', 'max-age=10') // 新版本 缓存时长 相对时间 单位s
   res.setHeader('Expires', new Date(Date.now() + 10 * 1000).toUTCString()) // 旧版本 绝对时间 需要字符串
 
