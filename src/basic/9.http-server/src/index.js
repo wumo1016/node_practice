@@ -5,6 +5,7 @@ const url = require('url')
 const path = require('path')
 const fs = require('fs').promises
 const crypto = require('crypto')
+const zlib = require('zlib')
 const {
   createReadStream,
   readFileSync
@@ -86,7 +87,7 @@ class Server {
     res.setHeader('Etag', etag)
 
     let ifModifiedSince = req.headers['if-modified-since']
-    let ifNodeMatch = requ.headers['if-none-match']
+    let ifNodeMatch = req.headers['if-none-match']
 
     if (ifModifiedSince !== ctime) { // 有可能时间一样 内容不一样
       return false
@@ -97,6 +98,21 @@ class Server {
     return true
   }
 
+  gzipFile(req, res, requestFile, stateObj) {
+    // 看浏览器是否支持压缩
+    let encodings = req.headers['accept-encoding']
+    if (encodings) {
+      if (encodings.includes('gzip')) {
+        res.setHeader('Content-Encoding', 'gzip')
+        return zlib.createGzip()
+      } else if (encodings.includes('deflate')) {
+        res.setHeader('Content=Encoding', 'deflate')
+        return zlib.createDeflate()
+      }
+    }
+    return false
+  }
+
   sendFile(req, res, requestFile, stateObj) {
     // 判断有没有缓存 有缓存就是用对比缓存
     if (this.cacheFile(req, res, requestFile, stateObj)) {
@@ -105,6 +121,11 @@ class Server {
     }
     // 返回文件 需要给浏览器提供内容类型和内容的编码格式
     res.setHeader('Content-Type', mime.getType(requestFile) + ';charset=utf-8')
+    // 是否支持压缩 如果支持 就返回压缩流
+    let gzip
+    if (gzip = this.gzipFile(req, res, requestFile, stateObj)) {
+      return createReadStream(requestFile).pipe(gzip).pipe(res)
+    }
     // 边读边写给浏览器
     createReadStream(requestFile).pipe(res)
   }
