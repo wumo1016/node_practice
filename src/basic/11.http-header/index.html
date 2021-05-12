@@ -11,12 +11,28 @@
 <body>
   <input type="file">
   <button id="btn">点击</button>
+
+  <form action="http://127.0.0.1:3000/login" method="POST">
+    <input type="txt" name="username">
+    <button>提交1</button>
+  </form>
+  <!-- h5的formdata就是multipart/form-data"的变体 -->
+  <form action="http://127.0.0.1:3000/login" method="POST" enctype="multipart/form-data">
+    <input type="text" name="username">
+    <input type="file" name="avatar">
+    <button>提交2</button>
+  </form>
+
   <script>
+    // document.cookie = '123456'
     btn.addEventListener('click', () => {
       let xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://localhost:3000/login', true)
+      xhr.open('POST', 'http://127.0.0.1:3000/login', true)
+      // xhr.open('Delete', 'http://127.0.0.1:3000/login', true) // 默认只允许get和post
+      xhr.setRequestHeader('token', '123456') // 自定义header
       xhr.setRequestHeader('Content-Type', 'application/json') // 请求数据类型
-      xhr.responseType = 'json' // 要求返回的数据类型 加上这个如果返回的是json字符串 就会自动转成json
+      // xhr.responseType = 'json' // 要求返回的数据类型 加上这个如果返回的是json字符串 就会自动转成json
+      xhr.withCredentials = true // 强制携带cookie(document.cookie) 需要配置header
       xhr.onload = function () {
         console.log(xhr.response);
       }
