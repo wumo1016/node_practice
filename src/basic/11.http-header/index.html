@@ -6,37 +6,72 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    img {
+      width: 300px;
+      height: auto;
+    }
+  </style>
 </head>
 
 <body>
-  <input type="file">
+  <!-- <input type="file">
   <button id="btn">点击</button>
 
   <form action="http://127.0.0.1:3000/login" method="POST">
     <input type="txt" name="username">
     <button>提交1</button>
-  </form>
+  </form> -->
   <!-- h5的formdata就是multipart/form-data"的变体 -->
-  <form action="http://127.0.0.1:3000/login" method="POST" enctype="multipart/form-data">
+  <!-- <form action="http://127.0.0.1:3000/login" method="POST" enctype="multipart/form-data">
     <input type="text" name="username">
     <input type="file" name="avatar">
     <button>提交2</button>
-  </form>
+  </form> -->
+
+  <div>
+    <input type="text" id="username">
+    <input type="file" id="avatar">
+    <button id="btn1">提交3</button>
+  </div>
 
   <script>
-    // document.cookie = '123456'
-    btn.addEventListener('click', () => {
-      let xhr = new XMLHttpRequest()
-      xhr.open('POST', 'http://127.0.0.1:3000/login', true)
-      // xhr.open('Delete', 'http://127.0.0.1:3000/login', true) // 默认只允许get和post
-      xhr.setRequestHeader('token', '123456') // 自定义header
-      xhr.setRequestHeader('Content-Type', 'application/json') // 请求数据类型
-      // xhr.responseType = 'json' // 要求返回的数据类型 加上这个如果返回的是json字符串 就会自动转成json
-      xhr.withCredentials = true // 强制携带cookie(document.cookie) 需要配置header
+    // btn.addEventListener('click', () => {
+    //   let xhr = new XMLHttpRequest()
+    //   xhr.open('POST', 'http://127.0.0.1:3000/login', true)
+    //   // xhr.open('Delete', 'http://127.0.0.1:3000/login', true) // 默认只允许get和post
+    //   xhr.setRequestHeader('token', '123456') // 自定义header
+    //   xhr.setRequestHeader('Content-Type', 'application/json') // 请求数据类型
+    //   // xhr.responseType = 'json' // 要求返回的数据类型 加上这个如果返回的是json字符串 就会自动转成json
+    //   xhr.withCredentials = true // 强制携带cookie(document.cookie) 需要配置header
+    //   xhr.onload = function () {
+    //     console.log(xhr.response);
+    //   }
+    //   xhr.send('{ "name": "wyb" }')
+    // })
+
+    let file;
+    avatar.addEventListener('change', (e) => {
+      // File  是 Blob的子集 二进制对象
+      file = e.target.files[0];
+    })
+    btn1.addEventListener('click', () => {
+      // avatar.value = '';
+      let fd = new FormData();
+      fd.append('username', username.value);
+      fd.append('avatar', file)
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+      xhr.open('POST', 'http://localhost:3000/login', true);
       xhr.onload = function () {
-        console.log(xhr.response);
+        // 浏览器会根据服务器返回的类型进行解析
+        let img = new Image();
+        // 表示的是当前服务器的根路径
+        img.src = '/upload/' + xhr.response.avatar.filename;
+        document.body.appendChild(img)
       }
-      xhr.send('{ "name": "wyb" }')
+      // 传递的数据格式是字符串类型
+      xhr.send(fd);
     })
   </script>
 </body>
