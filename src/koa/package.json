@@ -10,6 +10,7 @@
   "author": "wuyibo <760478279wyb@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.13.1"
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0"
   }
 }
