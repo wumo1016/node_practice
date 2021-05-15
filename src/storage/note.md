@@ -1,0 +1,13 @@
+## cookie session localStorage sessionStorage
+  - cookie
+    - 每次请求的时候会自动携带
+    - 大小限制(每个浏览器都不一样) 一般认为是最大是4k 如果过大 会导致页面白屏
+    - 不安全 因为每次都携带
+  - seesion
+    - 在服务器开辟一个空间用来存储用户对应的信息
+    - seesion是基于cookie的，session可以储存敏感信息
+  - sessionStorage
+    - 只要页面不关闭 就不会销毁
+  - localStorage
+    - 只要用户不手动清除 就一直存在
+    - 有大小限制 一般是5M
