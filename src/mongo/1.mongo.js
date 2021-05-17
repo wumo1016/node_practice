@@ -12,7 +12,7 @@ mongoose.connect('mongodb://webAdmin:123456@127.0.0.1:27017/web', {
 })
 
 // 2.给数据库创造一个固定的骨架 用来描述集合中的字段 规范存入的数据格式
-const UserSchema = mongoose.Schema({ // 在配置骨架的时候 可以增加默认值和校验 包括对属性的操作功能
+const UserSchema = new mongoose.Schema({ // 在配置骨架的时候 可以增加默认值和校验 包括对属性的操作功能
   username: {
     type: String,
     trim: true, // 表示去掉前后空格
