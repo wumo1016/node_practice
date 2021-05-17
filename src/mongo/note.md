@@ -48,5 +48,5 @@
   - 创建数据库专用用户
   - 进入指定库 然后登录即可
 
-## node工具 mongoose
+## node工具 mongoose(https://mongoosejs.com/docs/guide.html)
   - orm(对象关系映射)工具方便 而且可以约束存储内容
