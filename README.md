@@ -118,7 +118,7 @@
       - nginx反向代理
       - websocket
     - 缓存
-      - 强制缓存：不会向浏览器发请求 Cache-Control max-age=xxx
+      - 强制缓存：不会向浏览器发请求 Cache-Control:max-age=xxx
         - 首次访问的路径是不会缓存的
         - 需要根据不同的文件类型 设置不同的缓存时间
       - 对比缓存(协商缓存)：会发送请求，看有无变化决定是否使用缓存 Cache-Control no-cache
