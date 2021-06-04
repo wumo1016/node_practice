@@ -1,5 +1,5 @@
 // jwt json web token
-
+// 一般使用jsonwebtoken(可以加过期时间), 但是jwt-simple
 
 const Koa = require('koa');
 const Router = require('koa-router');
@@ -7,52 +7,46 @@ const bodyParser = require('koa-bodyparser');
 const jwt = require('jwt-simple')
 const app = new Koa();
 const router = new Router();
-// cookie koa 的cookie  
-// jsonwebtoken, jwt-simpile
-// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjEyMyI.Wsc0VW_YmYWwusCKpZnlWGmC_tsO1zckC0snp7O6iwc
+
+// jwt格式 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjEyMyI.kY6tu8Uz9o1j62jt76acOqbdog7UKGy7ZfkOxej7Bbw
+// 第一段：{ type: 'JWT', alg: 'HS256' } 由这个对象转化成base64编码
+// 第二段：就是用户传入的数据转化成的base64编码
+// 第三段：由前两段的内容使用进行拼接 然后加key使用加盐摘要算法 加密出来的
+
 const jw = {
-    sign(str, secret) {
-        str = require('crypto').createHmac('sha256', secret).update(str).digest('base64');
-        return this.toBase64Escape(str)
+    sign(str, key) {
+        str = require('crypto').createHmac('sha256', key).update(str).digest('base64')
+        return this.base64Escape(str)
     },
-    toBase64(content) { // buffer -> base64
-        return this.toBase64Escape(Buffer.from(JSON.stringify(content)).toString('base64'));
+    toBase64(content) {
+        return this.base64Escape(Buffer.from(JSON.stringify(content)).toString('base64'))
     },
-    toBase64Escape(base64) {
-        return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+    base64Escape(base64) {
+        return base64.replace(/\+/, '-').replace(/\//, '_').replace(/\=/, '')
     },
-    encode(content, secret) {
-        let line1 = this.toBase64({
-            typ: 'JWT',
-            alg: 'HS256'
-        })
-        let line2 = this.toBase64(content);
-        let line3 = this.sign([line1, line2].join('.'), secret);
-        return line1 + '.' + line2 + '.' + line3
-        //               内容base64， 过期时间
-    },
-    base64urlUnescape(str) {
+    reverseBase64Escape(str) {
         str += new Array(5 - str.length % 4).join('=');
         return str.replace(/\-/g, '+').replace(/_/g, '/');
     },
-    // 内容 = 签名 
-    decode(token, secret) {
-        let [line1, line2, line3] = token.split('.');
-        if (this.sign([line1, line2].join('.'), secret) === line3) {
-            // console.log(line2); // line2 内容就一定是可靠的  用户id -》 用户的信息 -> 数据库
-
-            // if(line2.exp < Date.now(){
-
-            // })else{
-
-            // }
-            const r = Buffer.from(this.base64urlUnescape(line2), 'base64').toString();
-            return r;
+    encode(content, key) {
+        let frag1 = this.toBase64({
+            typ: 'JWT',
+            alg: 'HS256'
+        })
+        let frag2 = this.toBase64(content)
+        let frag3 = this.sign([frag1, frag2].join('.'), key)
+        return `${frag1}.${frag2}.${frag3}`
+    },
+    decode(token, key) {
+        let [frag1, frag2, frag3] = token.split('.')
+        if (this.sign([frag1, frag2].join('.'), key) === frag3) {
+            return Buffer.from(this.reverseBase64Escape(frag2), 'base64').toString()
         } else {
-            throw new Error('被修改过了')
+            throw new Error('token错误')
         }
     }
 }
+// console.log(jw.decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjEyMyI.kY6tu8Uz9o1j62jt76acOqbdog7UKGy7ZfkOxej7Bbw', 'wyb'));
 
 app.use(bodyParser());
 router.post('/login', async (ctx, next) => {
@@ -60,9 +54,8 @@ router.post('/login', async (ctx, next) => {
         username,
         password
     } = ctx.request.body;
-    console.log(username);
     if (username == 123 && password == 123) {
-        let token = jw.encode(username, 'zf'); // 放入用户id
+        let token = jw.encode(username, 'wyb'); // username是加密的内容 zf是加密的key
         ctx.body = {
             err: 0,
             data: {
@@ -70,6 +63,8 @@ router.post('/login', async (ctx, next) => {
                 username
             }
         }
+    } else {
+        ctx.body = username
     }
 });
 
@@ -78,7 +73,7 @@ router.get('/validate', async (ctx) => {
     if (authorization) {
         let [, token] = authorization.split(' ');
         try {
-            let r = jw.decode(token, 'zf');
+            let r = jw.decode(token, 'wyb');
             ctx.body = {
                 err: 0,
                 data: {
@@ -93,10 +88,8 @@ router.get('/validate', async (ctx) => {
                 }
             }
         }
-
     }
 })
-
 
 app.use(router.routes());
 app.listen(3000);
