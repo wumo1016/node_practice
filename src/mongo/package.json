@@ -1,5 +1,5 @@
 {
-  "name": "koa",
+  "name": "mongo",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -9,10 +9,7 @@
   "keywords": [],
   "author": "wuyibo <760478279wyb@gmail.com>",
   "license": "ISC",
-  "dependencies": {
-    "koa": "^2.13.1",
-    "koa-bodyparser": "^4.3.0",
-    "koa-router": "^10.0.0",
-    "koa-static": "^5.0.0"
+  "devDependencies": {
+    "mongoose": "^5.12.9"
   }
 }
